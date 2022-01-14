@@ -1,0 +1,183 @@
+<?php
+/**
+ * 
+ * @Author Mohtaddi Mohammed
+ * 
+ * اذا كنت تريد دعم عدة انواع من هذا النمط
+ * يمكنك تعريف الخصائص الاساسية داخل الكلاس الاساسي 
+ * مع نقل المنطق الخاص بالانواع الاخري 
+ * الي كلاسات اخري ككلاس التسجيل 
+ * loggin
+ * مثلا 
+ */
+class Singleton
+{
+    /**
+     * 
+     * يتم تخزين الكائن من فئة 
+     * singleton
+     * في مصفوفة من النوع
+     * static
+     * و هذا لاننا سنتيح للفئة ان تكون لها فئات فرعية
+     * كل عنصر في هذه المصفوفة يمثل كائن لاحد الفئات الفرعية 
+     */
+    private static $instances = [];
+
+   
+    /**
+     * المشيد الخاص بفئة 
+     * singleton 
+     * لا يمكن ان يكون من النوع
+     * public
+     * لمنع عملية إنشاء كائن جديد عبر المعامل 
+     * new 
+     * كما انه لا يمكن ان يكون من النوع
+     * private 
+     * اذا اردنا اتاحته للفئات الفرعية
+     * لذلك استخدمنا النوع 
+     * protected
+     */
+    protected function __construct() { }
+
+     /**
+     * فئة 
+     * Singleton
+     * يجب ان لا تكون قابلة للنسخ 
+     * لذلك نقوم بمنع الوصول الي الاجراء 
+     * clone
+     * عبر تغيير ممحدد الوصول الي 
+     * protected OR private
+     */
+    protected function __clone() { }
+
+   
+    /**
+     * هذا الاجراء من النوع
+     * Static
+     * هو الذي يتحكم في كيفية الوصول الي كائنات الفئة
+     * singleton
+     * عند استدعاء هذا الاجراء لأول مرة 
+     * يقوم بإنشاء كائن و ادخاله الي المصفوفة السابقة من النوع 
+     * static
+     * في المرات التالية يقوم بإرجاع
+     *  نفس الكائن الذي تم تخزينه في المصفوفة
+     *
+     *
+     * يمكنك هذا الاجراء من انشاء كائنات للفئات الفرعية
+     * مع ضمان وجود كائن واحد لكل فئة فرعية
+     */
+    public static function getInstance()
+    {
+        $subclass = static::class;
+        if (!isset(self::$instances[$subclass])) {
+           
+            // لاحظ هنا اننا استخدمنا كلمة
+            // static
+            // بدلا عن الاسم الخاص بالكلاس
+            // في هذه الحالة
+            // static
+            // تعني اسم الكلاس الحالي الذي يقوم باستدعاء الاجراء 
+
+            self::$instances[$subclass] = new static();
+        }
+        return self::$instances[$subclass];
+    }
+}
+
+
+/**
+ * فئة التسجيل هي الاستخدام الأكثر شهرة والأكثر إشادة لنمط
+ * Singleton
+ * في معظم الحالات ، تحتاج إلى كائن تسجيل
+ *  واحد يكتب في سجل واحد (يتحكم في المصادر المشتركة)
+ * انت ايضا بحاجة لوسيلة مريحة للوصول
+ *  لهذا الكائن من اي مكان داخل تطبيقك (نقطة وصول عامة) 
+ */
+class Logger extends Singleton
+{
+    /**
+     *مؤشر للاشارة الي ملف السجل
+     */
+    private $fileHandle;
+
+    /**
+     *مسار ملف السجل
+     */
+    private $LOGFILEPATH = 'log.txt';
+
+    /**
+     * لقراءة الرسائل من ملف السجل و عرضها علي الصفحة
+     */
+    private $logContent;
+
+    /**
+     * حيث انه يتم استدعاء المشيد مرة واحدة فقط في نمط
+     * Singleton
+     * يتم فتح ملف واحد فقط في كل الاوقات
+     */
+    protected function __construct()
+    {
+        $this->fileHandle = fopen($this->LOGFILEPATH , 'a+');
+    }
+
+    /**
+     * ادخال رسالة جديدة الي ملف السجلات
+     */
+    public function writeLog(string $message): void
+    {
+        $date = date('d/m/y h:m:s');
+        fwrite($this->fileHandle, "$date: $message\n");
+    }
+
+    /**
+     *  قراءةالرسائل علي ملف السجل
+     */
+    public function readLog():void
+    {
+      $this->logContent =  file_get_contents($this->LOGFILEPATH);
+      
+      print("<pre>" . $this->logContent . "</pre>");
+    }
+    
+
+    /**
+     * مجرد اختصار مفيد لتقليل مقدار التعليمات البرمجية
+     *  اللازمة لتسجيل الرسائل من كود العميل
+     */
+    public static function log(string $message): void
+    {
+        $logger = static::getInstance();
+        $logger->writeLog($message);
+    }
+
+    /**
+     * مجرد اختصار مفيد لتقليل مقدار التعليمات البرمجية
+     *  اللازمة لقراءة الرسائل من كود العميل
+     */
+
+    public static function getLog(): void
+    {
+        $logger = static::getInstance();
+        $logger->readLog();
+    }
+}
+
+
+/**
+ * شفرة العميل
+ */
+
+Logger::log("بدأ تسجيل العمليات");
+
+// مقارنة القيم ما بين الكائنين
+$l1 = Logger::getInstance();
+$l2 = Logger::getInstance();
+if ($l1 === $l2) {
+    Logger::log("Logger  لديه كائن واحد فقط");
+} else {
+    Logger::log("Logger لديه كائنات مختلفة ");
+}
+
+Logger::log("انتهي تسجيل العمليات");
+
+Logger::getLog();
