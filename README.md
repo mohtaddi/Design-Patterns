@@ -18,11 +18,11 @@
 *** https://www.markdownguide.org/basic-syntax/#reference-style-links
 -->
 [![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url]
-[![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]
-[![MIT License][license-shield]][license-url]
-[![LinkedIn][linkedin-shield]][linkedin-url]
+[![Forks][forks-shield]][https://github.com/mohtaddi/Design-Patterns/network/members]
+[![Stargazers][stars-shield]][https://github.com/mohtaddi/Design-Patterns/stargazers]
+[![Issues][issues-shield]][https://github.com/mohtaddi/Design-Patterns/issues]
+[![MIT License][license-shield]][https://github.com/mohtaddi/Design-Patterns/blob/main/LICENSE]
+[![LinkedIn][linkedin-shield]][https://github.com/mohtaddi/Design-Patterns]
 
 
 
