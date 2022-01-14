@@ -1,9 +1,6 @@
-# Design-Patterns
-this Repo Takes Care Of unduerstanding Design Patterns 
-With Real World Examples Of Code ..
-
-
- #Pre-Requirements
- Strong Knowledge in OOP
-
- thats ALL ..
+[![Contributors][contributors-shield]][contributors-url]
+[![Forks][forks-shield]][forks-url]
+[![Stargazers][stars-shield]][stars-url]
+[![Issues][issues-shield]][issues-url]
+[![MIT License][license-shield]][license-url]
+[![LinkedIn][linkedin-shield]][linkedin-url]
